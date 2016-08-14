@@ -1,24 +1,6 @@
 # Basichttpd
 
-**TODO: Add description**
+Created as a weekend project for learning about gen_tcp and Elixir. 
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `basichttpd` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:basichttpd, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `basichttpd` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:basichttpd]]
-    end
-    ```
+http://learnyousomeerlang.com/buckets-of-sockets used as a guide.
 
