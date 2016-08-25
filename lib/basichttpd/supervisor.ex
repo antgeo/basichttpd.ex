@@ -14,7 +14,7 @@ defmodule BasicHttpd.Supervisor do
 				{:keepalive, true}, {:backlog, 1024}, {:active, true}]
 		{:ok, socket} = :gen_tcp.listen(8888, opts) 
 				Logger.info("Listening on port")
-		spawn_link(fn -> empty_listeners end)		
+		spawn_link(fn -> empty_listeners end)	
 		children = [
 			worker(BasicHttpd.Acceptor, [socket], restart: :transient)
 		]

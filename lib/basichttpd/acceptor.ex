@@ -15,13 +15,13 @@ defmodule BasicHttpd.Acceptor do
 	end
 
 	def start_link(socket) do
-		GenServer.start_link( __MODULE__ ,socket)
+		GenServer.start_link(__MODULE__ ,socket)
 	end
 
 	def handle_cast(:accept, state) do
 		{:ok, newsocket} = :gen_tcp.accept(state.socket)
 		Logger.debug "Accepting new socket"
-		Task.start_link(fn -> watchdog_timeout(state.pid) end)
+		Task.start_link(fn -> WatchdogTimeout(state.pid) end)
 		BasicHttpd.Supervisor.start_socket
 		{:noreply, %{state | socket: newsocket}}
 	end
@@ -71,7 +71,7 @@ defmodule BasicHttpd.Acceptor do
 	end
 
 
-	defp watchdog_timeout(pid) do
+	defp WatchdogTimeout(pid) do
 		# If we have no data after 5 seconds
 		Process.sleep(5000)
 		if GenServer.call(pid, :idle) == :true do
