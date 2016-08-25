@@ -8,6 +8,4 @@ env:
 before_script:
   - rvm install ruby-2.3.1
   - gem install pronto-credo
-script:
-  — if [ $PULL_REQUEST_ID != false ]; then pronto run -f github_pr; fi
-  — mix test
+script: if [ $PULL_REQUEST_ID != false ]; then pronto run -f github_pr; fi; mix test
