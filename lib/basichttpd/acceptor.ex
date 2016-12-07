@@ -1,8 +1,14 @@
 defmodule BasicHttpd.Acceptor do
+@moduledoc """
+Module accepting the socket
+"""
 	use GenServer
 	require Logger
 
 	defmodule SockState do
+		@moduledoc """
+		Struct for socket state
+		"""
 		defstruct socket: nil,
 				  data:   "",
 				  pid: nil
@@ -21,11 +27,11 @@ defmodule BasicHttpd.Acceptor do
 	def handle_cast(:accept, state) do
 		{:ok, newsocket} = :gen_tcp.accept(state.socket)
 		Logger.debug "Accepting new socket"
-		Task.start_link(fn -> WatchdogTimeout(state.pid) end)
+		Task.start_link(fn -> watchdog(state.pid) end)
 		BasicHttpd.Supervisor.start_socket
 		{:noreply, %{state | socket: newsocket}}
 	end
-	
+
 	def handle_cast(:shut, state) do
 		Logger.debug("Watchdog has killed this process")
 		:gen_tcp.close(state.socket)
@@ -71,7 +77,7 @@ defmodule BasicHttpd.Acceptor do
 	end
 
 
-	defp WatchdogTimeout(pid) do
+	defp watchdog(pid) do
 		# If we have no data after 5 seconds
 		Process.sleep(5000)
 		if GenServer.call(pid, :idle) == :true do
@@ -79,7 +85,7 @@ defmodule BasicHttpd.Acceptor do
 			exit(:normal)
 		end
 		# If we have been alive 30 seconds
-		Process.sleep(25000)
+		Process.sleep(25_000)
 		GenServer.cast(pid, :shut)
 		exit(:normal)
 	end
