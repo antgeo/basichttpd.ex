@@ -63,12 +63,12 @@ Module accepting the socket
 		{:stop, :normal, state}
 	end
 
-	def handle_info(a,state) do
-		Logger.debug "Uncaught info: #{inspect a}"
+	def handle_info(atom,state) do
+		Logger.debug "Uncaught info: #{inspect atom}"
 		{:noreply, state}
 	end
 
-	def handle_call(:idle, _from, state = %{data: ""}) do
+	def handle_call(:idle, _from, %{data: ""} = state) do
 		{:reply, :true, state}
 	end
 
